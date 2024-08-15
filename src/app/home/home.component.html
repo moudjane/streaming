@@ -1,0 +1,33 @@
+<div class="home-container">
+    <h1>Rechercher des Séries</h1>
+    <div class="search-bar">
+        <input [(ngModel)]="searchQuery" placeholder="Entrez le nom d'une série...">
+        <button (click)="searchSeries()">Rechercher</button>
+    </div>
+
+    <div *ngIf="searchResults.length > 0" class="results">
+        <h2>Résultats de recherche :</h2>
+        <div class="grid">
+            <div class="card" *ngFor="let series of searchResults" (click)="viewSeriesDetails(series.id)">
+                <img [src]="imageBaseUrl + series.poster_path" alt="{{ series.name }} Poster">
+                <div class="info">
+                    <h3>{{ series.name }}</h3>
+                    <p>Première diffusion : {{ series.first_air_date | date:'yyyy' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="searchResults.length === 0" class="top-series">
+        <h2>Top 100 Séries Populaires</h2>
+        <div class="grid">
+            <div class="card" *ngFor="let series of topSeries" (click)="viewSeriesDetails(series.id)">
+                <img [src]="imageBaseUrl + series.poster_path" alt="{{ series.name }} Poster">
+                <div class="info">
+                    <h3>{{ series.name }}</h3>
+                    <p>Première diffusion : {{ series.first_air_date | date:'yyyy' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

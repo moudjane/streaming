@@ -1,0 +1,13 @@
+<div class="container">
+    <h2 class="title">Popular Movies</h2>
+    <div class="grid">
+        <div class="card" *ngFor="let series of topSeries" (click)="launchSeries(series.id)">
+            <img [src]="imageBaseUrl + series.poster_path" alt="{{ series.name }} Poster" class="poster">
+            <div class="info">
+                <h3 class="series-title">{{ series.name }} ({{ series.first_air_date | date:'yyyy' }})</h3>
+                <p>Quality: HD</p>
+                <p>Version: {{ series.original_language }}</p>
+            </div>
+        </div>
+    </div>
+</div>
