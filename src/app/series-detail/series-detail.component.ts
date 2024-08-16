@@ -5,11 +5,12 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SeriesDetailsService } from './series-details.service';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 @Component({
   selector: 'app-series-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, SearchBarComponent],
   templateUrl: './series-detail.component.html',
   styleUrls: ['./series-detail.component.css']
 })
@@ -23,6 +24,7 @@ export class SeriesDetailComponent implements OnInit {
   tmdbApiKey: string = '819e4850402430664fdf93a2025c2c6d';
 
   iframeSrc: SafeResourceUrl | undefined;
+  videoUrl: string | undefined;  // Stocker l'URL de la vidéo en tant que chaîne de caractères
   apiUrl: string = 'https://frembed.pro/api/serie.php';
 
   constructor(
@@ -73,8 +75,14 @@ export class SeriesDetailComponent implements OnInit {
     if (this.selectedSeason !== undefined && this.selectedEpisode !== undefined) {
       this.router.navigate(['/series', this.seriesId, this.selectedSeason, this.selectedEpisode]);
 
-      const url = `${this.apiUrl}?id=${this.seriesId}&sa=${this.selectedSeason}&epi=${this.selectedEpisode}`;
-      this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      this.videoUrl = `${this.apiUrl}?id=${this.seriesId}&sa=${this.selectedSeason}&epi=${this.selectedEpisode}`;
+      this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(this.videoUrl);
+    }
+  }
+
+  openInNewTab() {
+    if (this.videoUrl) {
+      window.open(this.videoUrl, '_blank');
     }
   }
 }

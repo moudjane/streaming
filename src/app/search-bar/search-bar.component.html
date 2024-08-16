@@ -1,0 +1,25 @@
+<div class="search-bar">
+    <input [(ngModel)]="searchQuery" placeholder="Rechercher une série..." (input)="searchSeries()">
+    <button (click)="searchSeries()">Rechercher</button>
+</div>
+
+<!-- Mode Full Page (par exemple pour la page d'accueil) -->
+<div *ngIf="displayMode === 'fullPage' && searchResults.length > 0" class="results-grid">
+    <div *ngFor="let series of searchResults" class="series-card" (click)="viewSeriesDetails(series.id)">
+        <img [src]="imageBaseUrl + series.poster_path" alt="{{ series.name }} Poster">
+        <div class="info">
+            <h3>{{ series.name }}</h3>
+            <p>Première diffusion : {{ series.first_air_date | date:'yyyy' }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Mode Dropdown (par exemple pour la page d'une série spécifique) -->
+<div *ngIf="displayMode === 'dropdown' && searchResults.length > 0" class="dropdown-results">
+    <ul>
+        <li *ngFor="let series of searchResults" (click)="viewSeriesDetails(series.id)">
+            <img [src]="imageBaseUrl + series.poster_path" alt="{{ series.name }} Poster" class="dropdown-image">
+            <span>{{ series.name }}</span>
+        </li>
+    </ul>
+</div>
