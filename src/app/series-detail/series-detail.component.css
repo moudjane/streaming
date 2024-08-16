@@ -1,0 +1,125 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .series-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .series-info {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+  
+  .series-poster {
+    flex: 0 0 300px;
+  }
+  
+  .series-poster img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .series-details {
+    flex: 1;
+  }
+  
+  .series-overview {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+  }
+  
+  .season-episode-selector {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+  }
+  
+  button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #2980b9;
+  }
+  
+  .video-player {
+    margin-top: 30px;
+  }
+  
+  .video-player h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+  }
+  
+  iframe {
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .open-in-new-tab {
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .open-in-new-tab button {
+    background-color: transparent;
+    color: #3498db;
+    text-decoration: underline;
+    padding: 0;
+  }
+  
+  .open-in-new-tab button:hover {
+    color: #2980b9;
+  }
+  
+  @media (max-width: 768px) {
+    .series-info {
+      flex-direction: column;
+    }
+  
+    .series-poster {
+      flex: 0 0 auto;
+      margin-bottom: 20px;
+    }
+  }
