@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { SeriesDetailsService } from '../series-detail/series-details.service';
@@ -17,50 +17,48 @@ export class StreamingComponent implements OnInit {
   episodeNumber: number | undefined;
   poster: string | undefined;
   overview: string | undefined;
-  iframeSrc: SafeResourceUrl = '';
+  iframeSrc: SafeResourceUrl | undefined;
   apiUrl: string = 'https://frembed.pro/api/serie.php';
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private sanitizer: DomSanitizer,
     @Inject(SeriesDetailsService) private seriesDetailsService: SeriesDetailsService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    // Vérifier s'il y a des informations dans le localStorage
-    const storedDetails = localStorage.getItem('seriesDetails');
-    let seriesDetails;
+    this.route.queryParams.subscribe(params => {
+      this.seasonNumber = +params['season'];
+      this.episodeNumber = +params['episode'];
+      this.updateStream();
+    });
+
+    const storedDetails = this.seriesDetailsService.getSeriesDetails();
 
     if (storedDetails) {
-      seriesDetails = JSON.parse(storedDetails);
-    } else {
-      seriesDetails = this.seriesDetailsService.getSeriesDetails();
-    }
+      this.seriesName = storedDetails.name;
+      this.poster = storedDetails.poster;
+      this.overview = storedDetails.overview;
 
-    if (seriesDetails) {
-      this.seriesName = seriesDetails.name;
-      this.poster = seriesDetails.poster;
-      this.overview = seriesDetails.overview;
-      this.seasonNumber = seriesDetails.season;
-      this.episodeNumber = seriesDetails.episode;
-    }
-
-    this.route.params.subscribe(params => {
-      const seriesId = +params['id'];
-      if (!isNaN(seriesId)) {
-        this.launchSeriesById(seriesId);
-      } else {
-        console.error('Invalid series ID:', seriesId);
+      if (this.seasonNumber && this.episodeNumber) {
+        this.updateStream();
       }
-    });
+    }
   }
 
-  launchSeriesById(seriesId: number) {
-    if (!seriesId || isNaN(seriesId)) {
-      console.error('Invalid series ID:', seriesId);
-      return;
+  updateStream() {
+    if (this.seasonNumber && this.episodeNumber) {
+      const seriesId = this.seriesDetailsService.getSeriesDetails().id;
+      if (seriesId && !isNaN(this.seasonNumber) && !isNaN(this.episodeNumber)) {
+        const url = `${this.apiUrl}?id=${seriesId}&sa=${this.seasonNumber}&epi=${this.episodeNumber}`;
+        this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      } else {
+        console.error('ID de série, saison ou épisode invalide.');
+      }
+    } else {
+      console.error('Les paramètres de saison ou d\'épisode sont manquants.');
     }
-    const url = `${this.apiUrl}?id=${seriesId}&sa=${this.seasonNumber}&epi=${this.episodeNumber}`;
-    this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
+  
 }

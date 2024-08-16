@@ -31,11 +31,18 @@ export class SeriesDetailComponent implements OnInit {
     private http: HttpClient,
     private sanitizer: DomSanitizer,
     private seriesDetailsService: SeriesDetailsService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.seriesId = +this.route.snapshot.params['id'];
-    this.getSeriesDetails();
+    this.route.params.subscribe(params => {
+      this.seriesId = +params['id'];
+      this.selectedSeason = +params['season'];
+      this.selectedEpisode = +params['episode'];
+      this.getSeriesDetails();
+      if (this.selectedSeason && this.selectedEpisode) {
+        this.launchEpisode();
+      }
+    });
   }
 
   getSeriesDetails() {
@@ -43,6 +50,9 @@ export class SeriesDetailComponent implements OnInit {
     this.http.get(url).subscribe(response => {
       this.seriesDetails = response;
       this.availableSeasons = this.seriesDetails.seasons;
+      if (this.selectedSeason) {
+        this.getEpisodesForSeason(this.selectedSeason);
+      }
     });
   }
 
@@ -61,18 +71,8 @@ export class SeriesDetailComponent implements OnInit {
 
   launchEpisode() {
     if (this.selectedSeason !== undefined && this.selectedEpisode !== undefined) {
-      const seriesDetails = {
-        id: this.seriesId,
-        name: this.seriesDetails.name,
-        poster: this.seriesDetails.poster_path,
-        overview: this.seriesDetails.overview,
-        season: this.selectedSeason,
-        episode: this.selectedEpisode
-      };
+      this.router.navigate(['/series', this.seriesId, this.selectedSeason, this.selectedEpisode]);
 
-      this.seriesDetailsService.setSeriesDetails(seriesDetails);
-
-      // Construire l'URL du lecteur vidéo et l'afficher dans l'iframe
       const url = `${this.apiUrl}?id=${this.seriesId}&sa=${this.selectedSeason}&epi=${this.selectedEpisode}`;
       this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
